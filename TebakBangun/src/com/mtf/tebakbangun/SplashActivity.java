@@ -16,7 +16,7 @@ public class SplashActivity extends BaseSplashActivity {
 
 	@Override
 	protected IBitmapTextureAtlasSource onGetSplashTextureAtlasSource() {
-		return new AssetBitmapTextureAtlasSource(this, "gfx/splash0.png");
+		return new AssetBitmapTextureAtlasSource(this, "gfx/splash.png");
 	}
 
 	@Override
