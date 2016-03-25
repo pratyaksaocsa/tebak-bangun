@@ -26,7 +26,7 @@ public class SplashActivity extends BaseSplashActivity {
 
 	@Override
 	protected Class<? extends Activity> getFollowUpActivity() {
-		return PlayGameActivity.class;
+		return MainMenuActivity.class;
 	}
 
 }
