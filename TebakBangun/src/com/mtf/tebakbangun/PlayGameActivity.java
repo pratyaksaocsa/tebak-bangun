@@ -79,7 +79,9 @@ public class PlayGameActivity extends BaseGameActivity implements
 	private Sound mClickSound;
 	private EngineOptions m_engineOptions;
 	
-	private GameHUD m_TopHUD, m_BottomHUD;
+	Rectangle answer1, answer2, answer3;
+	
+	private GameHUD m_TopHUD;
 	private int score = 0;
 	private ChangeableText mScoreTextValue, mLevelText;
 	//public static ChangeableText mGoldTextValue;
@@ -89,6 +91,61 @@ public class PlayGameActivity extends BaseGameActivity implements
 	PixelPerfectTiledTextureRegion[] m_BasicShapeTiledTextureRegion;
 	String m_BasicShapeFilename[] = {"shape1.png","shape2.png","shape3.png","shape1.png","shape2.png","shape3.png"};
 
+	private void CreateAnswerButton()
+	{
+		int ANSWER_WIDTH = 100, ANSWER_HEIGHT = 75, PADDING = 50;
+		answer1 = new Rectangle(10, CAMERA_HEIGHT - ANSWER_HEIGHT, ANSWER_WIDTH, ANSWER_HEIGHT){
+			@Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.isActionUp()) {
+                	mClickSound.play();
+                	score += 10;
+                	mScoreTextValue.setText(String.valueOf(score));
+                	return true;
+                }
+                return false;
+            }
+        };
+		answer1.setColor(1.0f, 0.0f, 0.0f);
+		answer2 = new Rectangle(answer1.getWidth() + PADDING, CAMERA_HEIGHT - ANSWER_HEIGHT, ANSWER_WIDTH, ANSWER_HEIGHT){
+			@Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.isActionUp()) {
+                	mClickSound.play();
+                	score += 10;
+                	mScoreTextValue.setText(String.valueOf(score));
+                	return true;
+                }
+                return false;
+			}
+	    };
+		answer2.setColor(0.0f, 1.0f, 0.0f);
+		answer3 = new Rectangle(answer1.getWidth() + PADDING + answer2.getWidth() + PADDING, 
+				CAMERA_HEIGHT - ANSWER_HEIGHT, ANSWER_WIDTH, ANSWER_HEIGHT){
+			@Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.isActionUp()) {
+                	mClickSound.play();
+                    score += 10;
+                    mScoreTextValue.setText(String.valueOf(score));
+                	return true;
+                }
+                return false;
+			}
+		};
+		answer3.setColor(0.0f, 0.0f, 1.0f);
+
+		m_mainScene.registerTouchArea(answer1);
+		m_mainScene.registerTouchArea(answer2);
+		m_mainScene.registerTouchArea(answer3);
+		m_mainScene.attachChild(answer1);
+		m_mainScene.attachChild(answer2);
+		m_mainScene.attachChild(answer3);
+		m_mainScene.setTouchAreaBindingEnabled(true);
+		m_mainScene.setOnAreaTouchListener(this);
+		m_mainScene.setOnSceneTouchListener(this);
+	}
+	
 	@Override
 	public Engine onLoadEngine() {
 		this.m_Camera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
@@ -136,8 +193,7 @@ public class PlayGameActivity extends BaseGameActivity implements
 		this.mEngine.getTextureManager().loadTexture(m_BackgroundAtlas);
 		
 		try {
-			mClickSound = SoundFactory.createSoundFromAsset(
-					mEngine.getSoundManager(), this, "click.wav");
+			mClickSound = SoundFactory.createSoundFromAsset(mEngine.getSoundManager(), this, "click.wav");
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -147,8 +203,7 @@ public class PlayGameActivity extends BaseGameActivity implements
 		}
 
 		try {
-			mBackgroundMusic = MusicFactory.createMusicFromAsset(
-					mEngine.getMusicManager(), this, "background_mixed.mp3");
+			mBackgroundMusic = MusicFactory.createMusicFromAsset(mEngine.getMusicManager(), this, "background_mixed.mp3");
 			mBackgroundMusic.setLooping(true);
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
@@ -181,21 +236,9 @@ public class PlayGameActivity extends BaseGameActivity implements
 		//mLifeHUD.setProgressColor(0.0f, 1.0f, 0.0f, 1.0f);
 		//mLifeHUD.attachChild(lifeHUDBackground);
 		//mLifeHUD.attachChild(statusBackground);
-		m_BottomHUD = new GameHUD(this.m_Camera, 0, CAMERA_HEIGHT - 15, CAMERA_WIDTH, 15);
-		Rectangle answer1 = new Rectangle(10, 2, 100, 15);
-		answer1.setColor(1.0f, 0.0f, 0.0f);
-		Rectangle answer2 = new Rectangle(answer1.getWidth() + 10, 2, 100, 15);
-		answer2.setColor(0.0f, 1.0f, 0.0f);
-		Rectangle answer3 = new Rectangle(answer1.getWidth() + answer2.getWidth() + 10, 2, 100, 15);
-		answer3.setColor(0.0f, 0.0f, 1.0f);
-		m_BottomHUD.attachChild(answer1);
-		m_BottomHUD.attachChild(answer2);
-		m_BottomHUD.attachChild(answer3);
-		//m_BottomHUD.attachChild(mScoreText);
-		//m_BottomHUD.attachChild(mScoreTextValue);
+		CreateAnswerButton();
 		
 		this.m_Camera.setHUD(m_TopHUD);
-		this.m_Camera.setHUD(m_BottomHUD);
 		
 		return m_mainScene;
 	}
@@ -215,8 +258,11 @@ public class PlayGameActivity extends BaseGameActivity implements
 	@Override
 	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, ITouchArea pTouchArea, float pTouchAreaLocalX,
 			float pTouchAreaLocalY) {
-		// TODO Auto-generated method stub
-		return false;
+		//m_mainScene.onSceneTouchEvent(pSceneTouchEvent);
+		 //answer1.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+		 //answer2.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+		 //answer3.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+		 return true;
 	}
 
 	@Override
