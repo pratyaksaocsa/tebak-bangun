@@ -14,6 +14,7 @@ import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.WakeLockOptions;
 import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
+import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.Scene.IOnAreaTouchListener;
 import org.anddev.andengine.entity.scene.Scene.IOnSceneTouchListener;
@@ -26,6 +27,8 @@ import org.anddev.andengine.entity.scene.menu.item.decorator.ColorMenuItemDecora
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.sprite.AnimatedSprite;
 import org.anddev.andengine.entity.sprite.AnimatedSprite.IAnimationListener;
+import org.anddev.andengine.entity.text.ChangeableText;
+import org.anddev.andengine.entity.text.Text;
 import org.anddev.andengine.entity.util.FPSLogger;
 import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.opengl.font.Font;
@@ -35,9 +38,11 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
+import org.anddev.andengine.util.HorizontalAlign;
 
 import com.qwerjk.andengine.opengl.texture.region.PixelPerfectTextureRegionFactory;
 import com.qwerjk.andengine.opengl.texture.region.PixelPerfectTiledTextureRegion;
+import com.mtf.tebakbangun.model.GameHUD;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -74,6 +79,12 @@ public class PlayGameActivity extends BaseGameActivity implements
 	private Sound mClickSound;
 	private EngineOptions m_engineOptions;
 	
+	private GameHUD m_TopHUD, m_BottomHUD;
+	private int score = 0;
+	private ChangeableText mScoreTextValue, mLevelText;
+	//public static ChangeableText mGoldTextValue;
+	private Text mScoreText;
+	
 	BitmapTextureAtlas[] m_BasicShapeAtlas;
 	PixelPerfectTiledTextureRegion[] m_BasicShapeTiledTextureRegion;
 	String m_BasicShapeFilename[] = {"shape1.png","shape2.png","shape3.png","shape1.png","shape2.png","shape3.png"};
@@ -92,10 +103,13 @@ public class PlayGameActivity extends BaseGameActivity implements
 		
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
 		FontFactory.setAssetBasePath("font/");
+		MusicFactory.setAssetBasePath("mfx/");
+		SoundFactory.setAssetBasePath("mfx/");
+		PixelPerfectTextureRegionFactory.setAssetBasePath("gfx/");
 		
 		// load font
 		this.m_FontTextureAtlas = new BitmapTextureAtlas(256, 256,TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		this.m_Font = FontFactory.createFromAsset(m_FontTextureAtlas, this, "PORKYS_.TTF", 32, true, Color.BLACK);
+		this.m_Font = FontFactory.createFromAsset(m_FontTextureAtlas, this, "PORKYS_.TTF", 20, true, Color.BLACK);
 		this.mEngine.getTextureManager().loadTexture(this.m_FontTextureAtlas);
 		this.mEngine.getFontManager().loadFont(m_Font);
 		
@@ -121,8 +135,6 @@ public class PlayGameActivity extends BaseGameActivity implements
 				.createFromAsset(m_BackgroundAtlas, this, "maps1.png", 0, 0);
 		this.mEngine.getTextureManager().loadTexture(m_BackgroundAtlas);
 		
-		
-		SoundFactory.setAssetBasePath("mfx/");
 		try {
 			mClickSound = SoundFactory.createSoundFromAsset(
 					mEngine.getSoundManager(), this, "click.wav");
@@ -134,7 +146,6 @@ public class PlayGameActivity extends BaseGameActivity implements
 			e.printStackTrace();
 		}
 
-		MusicFactory.setAssetBasePath("mfx/");
 		try {
 			mBackgroundMusic = MusicFactory.createMusicFromAsset(
 					mEngine.getMusicManager(), this, "background_mixed.mp3");
@@ -151,8 +162,42 @@ public class PlayGameActivity extends BaseGameActivity implements
 	
 	@Override
 	public Scene onLoadScene() {
-		return m_mainScene;
+		mEngine.registerUpdateHandler(new FPSLogger());
+		m_mainScene = new Scene();
+		final int centerX = (CAMERA_WIDTH - this.m_BackgroundTextureRegion.getWidth()) / 2;
+		final int centerY = (CAMERA_HEIGHT - this.m_BackgroundTextureRegion.getHeight()) / 2;
+		Sprite background = new Sprite(centerX, centerY, m_BackgroundTextureRegion);
+		m_mainScene.attachChild(background);
 		
+		mScoreText = new Text(400, 5, this.m_Font, "Score :", HorizontalAlign.LEFT);
+		mScoreTextValue = new ChangeableText(400 + mScoreText.getWidth() + 5, 5, this.m_Font, score + "", 
+				HorizontalAlign.LEFT, 10);
+		
+		m_TopHUD = new GameHUD(this.m_Camera, 0, 0, CAMERA_WIDTH, 15);
+		m_TopHUD.attachChild(mScoreText);
+		m_TopHUD.attachChild(mScoreTextValue);
+		//mLifeHUD.setFrameColor(0.0f, 0.0f, 0.0f, 0.0f);
+		//mLifeHUD.setBackColor(1.0f, 0.0f, 0.0f, 1.0f);
+		//mLifeHUD.setProgressColor(0.0f, 1.0f, 0.0f, 1.0f);
+		//mLifeHUD.attachChild(lifeHUDBackground);
+		//mLifeHUD.attachChild(statusBackground);
+		m_BottomHUD = new GameHUD(this.m_Camera, 0, CAMERA_HEIGHT - 15, CAMERA_WIDTH, 15);
+		Rectangle answer1 = new Rectangle(10, 2, 100, 15);
+		answer1.setColor(1.0f, 0.0f, 0.0f);
+		Rectangle answer2 = new Rectangle(answer1.getWidth() + 10, 2, 100, 15);
+		answer2.setColor(0.0f, 1.0f, 0.0f);
+		Rectangle answer3 = new Rectangle(answer1.getWidth() + answer2.getWidth() + 10, 2, 100, 15);
+		answer3.setColor(0.0f, 0.0f, 1.0f);
+		m_BottomHUD.attachChild(answer1);
+		m_BottomHUD.attachChild(answer2);
+		m_BottomHUD.attachChild(answer3);
+		//m_BottomHUD.attachChild(mScoreText);
+		//m_BottomHUD.attachChild(mScoreTextValue);
+		
+		this.m_Camera.setHUD(m_TopHUD);
+		this.m_Camera.setHUD(m_BottomHUD);
+		
+		return m_mainScene;
 	}
 
 	@Override
