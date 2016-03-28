@@ -42,6 +42,7 @@ import org.anddev.andengine.util.HorizontalAlign;
 
 import com.qwerjk.andengine.opengl.texture.region.PixelPerfectTextureRegionFactory;
 import com.qwerjk.andengine.opengl.texture.region.PixelPerfectTiledTextureRegion;
+import com.mtf.tebakbangun.model.AnswerButton;
 import com.mtf.tebakbangun.model.GameHUD;
 
 import android.content.Intent;
@@ -79,68 +80,44 @@ public class PlayGameActivity extends BaseGameActivity implements
 	private Sound mClickSound;
 	private EngineOptions m_engineOptions;
 	
-	Rectangle answer1, answer2, answer3;
-	
 	private GameHUD m_TopHUD;
 	private int score = 0;
 	private ChangeableText mScoreTextValue, mLevelText;
 	//public static ChangeableText mGoldTextValue;
 	private Text mScoreText;
 	
+	BitmapTextureAtlas mAnswerTextureAtlas;
+	TextureRegion mAnswerTexture;
+	
 	BitmapTextureAtlas[] m_BasicShapeAtlas;
 	PixelPerfectTiledTextureRegion[] m_BasicShapeTiledTextureRegion;
 	String m_BasicShapeFilename[] = {"shape1.png","shape2.png","shape3.png","shape1.png","shape2.png","shape3.png"};
 
+	public void addScore() {
+		this.score += 100;
+		mScoreTextValue.setText(String.valueOf(score));
+	}
+	
+	public Sound getClickSound()
+	{
+		return mClickSound;
+	}
+	
 	private void CreateAnswerButton()
 	{
 		int ANSWER_WIDTH = 100, ANSWER_HEIGHT = 75, PADDING = 50;
-		answer1 = new Rectangle(10, CAMERA_HEIGHT - ANSWER_HEIGHT, ANSWER_WIDTH, ANSWER_HEIGHT){
-			@Override
-            public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                if (pSceneTouchEvent.isActionUp()) {
-                	mClickSound.play();
-                	score += 10;
-                	mScoreTextValue.setText(String.valueOf(score));
-                	return true;
-                }
-                return false;
-            }
-        };
-		answer1.setColor(1.0f, 0.0f, 0.0f);
-		answer2 = new Rectangle(answer1.getWidth() + PADDING, CAMERA_HEIGHT - ANSWER_HEIGHT, ANSWER_WIDTH, ANSWER_HEIGHT){
-			@Override
-            public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                if (pSceneTouchEvent.isActionUp()) {
-                	mClickSound.play();
-                	score += 10;
-                	mScoreTextValue.setText(String.valueOf(score));
-                	return true;
-                }
-                return false;
-			}
-	    };
-		answer2.setColor(0.0f, 1.0f, 0.0f);
-		answer3 = new Rectangle(answer1.getWidth() + PADDING + answer2.getWidth() + PADDING, 
-				CAMERA_HEIGHT - ANSWER_HEIGHT, ANSWER_WIDTH, ANSWER_HEIGHT){
-			@Override
-            public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                if (pSceneTouchEvent.isActionUp()) {
-                	mClickSound.play();
-                    score += 10;
-                    mScoreTextValue.setText(String.valueOf(score));
-                	return true;
-                }
-                return false;
-			}
-		};
-		answer3.setColor(0.0f, 0.0f, 1.0f);
-
-		m_mainScene.registerTouchArea(answer1);
-		m_mainScene.registerTouchArea(answer2);
-		m_mainScene.registerTouchArea(answer3);
-		m_mainScene.attachChild(answer1);
-		m_mainScene.attachChild(answer2);
-		m_mainScene.attachChild(answer3);
+		AnswerButton answers[] = new AnswerButton[3];
+		int correctAnswer = (int)(Math.random() * 3);
+		for(int i=0;i<3;i++)
+		{
+			int pX = (i * ANSWER_WIDTH) + PADDING;
+			int pY = CAMERA_HEIGHT - ANSWER_HEIGHT;
+			answers[i] = new AnswerButton(pX, pY, ANSWER_WIDTH, ANSWER_HEIGHT, mAnswerTexture, this);
+			if(i == correctAnswer)
+				answers[i].SetIsCorrectAnswer(true);
+			m_mainScene.registerTouchArea(answers[i]);
+			m_mainScene.attachChild(answers[i]);
+		}
 		m_mainScene.setTouchAreaBindingEnabled(true);
 		m_mainScene.setOnAreaTouchListener(this);
 		m_mainScene.setOnSceneTouchListener(this);
@@ -165,7 +142,7 @@ public class PlayGameActivity extends BaseGameActivity implements
 		PixelPerfectTextureRegionFactory.setAssetBasePath("gfx/");
 		
 		// load font
-		this.m_FontTextureAtlas = new BitmapTextureAtlas(256, 256,TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.m_FontTextureAtlas = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.m_Font = FontFactory.createFromAsset(m_FontTextureAtlas, this, "PORKYS_.TTF", 20, true, Color.BLACK);
 		this.mEngine.getTextureManager().loadTexture(this.m_FontTextureAtlas);
 		this.mEngine.getFontManager().loadFont(m_Font);
@@ -187,10 +164,16 @@ public class PlayGameActivity extends BaseGameActivity implements
 		}*/
 		
 		// load background
-		this.m_BackgroundAtlas = new BitmapTextureAtlas(1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.m_BackgroundAtlas = new BitmapTextureAtlas(1024, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.m_BackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory
-				.createFromAsset(m_BackgroundAtlas, this, "maps1.png", 0, 0);
+				.createFromAsset(m_BackgroundAtlas, this, "background.png", 0, 0);
 		this.mEngine.getTextureManager().loadTexture(m_BackgroundAtlas);
+		
+		//load button
+		this.mAnswerTextureAtlas = new BitmapTextureAtlas(256, 128,	TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.mAnswerTexture = BitmapTextureAtlasTextureRegionFactory
+				.createFromAsset(mAnswerTextureAtlas, this, "button.png", 0, 0);
+		this.mEngine.getTextureManager().loadTexture(mAnswerTextureAtlas);
 		
 		try {
 			mClickSound = SoundFactory.createSoundFromAsset(mEngine.getSoundManager(), this, "click.wav");

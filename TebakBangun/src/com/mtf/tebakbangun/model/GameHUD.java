@@ -31,8 +31,8 @@ public class GameHUD extends HUD {
 		/*this.mFrameLines[0] = new Line(pX, pY, pX + pWidth, pY, FRAME_LINE_WIDTH); // Top line.
 		this.mFrameLines[1] = new Line(pX + pWidth, pY, pX + pWidth, pY + pHeight, FRAME_LINE_WIDTH); // Right line.
 		this.mFrameLines[2] = new Line(pX + pWidth, pY + pHeight, pX, pY+ pHeight, FRAME_LINE_WIDTH); // Bottom line.
-		this.mFrameLines[3] = new Line(pX, pY + pHeight, pX, pY,FRAME_LINE_WIDTH); // Left line.
-		*/
+		this.mFrameLines[3] = new Line(pX, pY + pHeight, pX, pY,FRAME_LINE_WIDTH); // Left line.*/
+		
 		this.mProgressRectangle = new Rectangle(pX, pY, pWidth, pHeight);
 		/*
 		super.attachChild(this.mBackgroundRectangle); // This one is drawn first.
