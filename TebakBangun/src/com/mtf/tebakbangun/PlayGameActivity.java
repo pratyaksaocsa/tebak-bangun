@@ -44,6 +44,7 @@ import com.qwerjk.andengine.opengl.texture.region.PixelPerfectTextureRegionFacto
 import com.qwerjk.andengine.opengl.texture.region.PixelPerfectTiledTextureRegion;
 import com.mtf.tebakbangun.model.AnswerButton;
 import com.mtf.tebakbangun.model.GameHUD;
+import com.mtf.tebakbangun.model.BasicShapeAnimated;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -94,7 +95,7 @@ public class PlayGameActivity extends BaseGameActivity implements
 	String m_BasicShapeFilename[] = {"shape1.png","shape2.png","shape3.png","shape1.png","shape2.png","shape3.png"};
 
 	public void addScore() {
-		this.score += 100;
+		this.score += 10;
 		mScoreTextValue.setText(String.valueOf(score));
 	}
 	
@@ -103,24 +104,40 @@ public class PlayGameActivity extends BaseGameActivity implements
 		return mClickSound;
 	}
 	
+	public Scene getMainScene()
+	{
+		return m_mainScene;
+	}
+	
 	private void CreateAnswerButton()
 	{
-		int ANSWER_WIDTH = 100, ANSWER_HEIGHT = 75, PADDING = 50;
 		AnswerButton answers[] = new AnswerButton[3];
 		int correctAnswer = (int)(Math.random() * 3);
+		int pX = 0;
+		int pY = CAMERA_HEIGHT - AnswerButton.ANSWER_HEIGHT;
 		for(int i=0;i<3;i++)
 		{
-			int pX = (i * ANSWER_WIDTH) + PADDING;
-			int pY = CAMERA_HEIGHT - ANSWER_HEIGHT;
-			answers[i] = new AnswerButton(pX, pY, ANSWER_WIDTH, ANSWER_HEIGHT, mAnswerTexture, this);
+			pX += AnswerButton.PADDING;
+			answers[i] = new AnswerButton(mAnswerTexture, m_Font, "KUBUS", this);
 			if(i == correctAnswer)
 				answers[i].SetIsCorrectAnswer(true);
-			m_mainScene.registerTouchArea(answers[i]);
-			m_mainScene.attachChild(answers[i]);
+			answers[i].setPosition(pX, pY);
+			answers[i].Draw();
+			pX += AnswerButton.ANSWER_WIDTH;
+			pX += AnswerButton.PADDING;
 		}
-		m_mainScene.setTouchAreaBindingEnabled(true);
-		m_mainScene.setOnAreaTouchListener(this);
-		m_mainScene.setOnSceneTouchListener(this);
+	}
+	
+	private void CreateQuestion()
+	{
+		int QUESTION_WIDTH = 200, QUESTION_HEIGHT = 200;
+		final int centerX = CAMERA_WIDTH / 2;
+		final int centerY = CAMERA_HEIGHT / 2;
+		BasicShapeAnimated question = new BasicShapeAnimated(centerX-(QUESTION_WIDTH/2), centerY-(QUESTION_HEIGHT/2), 
+				QUESTION_WIDTH, QUESTION_HEIGHT, m_BasicShapeTiledTextureRegion[0], this);
+		m_mainScene.registerTouchArea(question);
+		m_mainScene.attachChild(question);
+		question.animate(100);
 	}
 	
 	@Override
@@ -156,6 +173,9 @@ public class PlayGameActivity extends BaseGameActivity implements
 			this.m_BasicShapeTiledTextureRegion[i] = PixelPerfectTextureRegionFactory
 					.createTiledFromAsset(m_BasicShapeAtlas[i], this, m_BasicShapeFilename[i], 0, 0,
 							4, 2);
+		}
+		for (int i = 0; i < m_BasicShapeFilename.length; i++) {
+			this.mEngine.getTextureManager().loadTexture(m_BasicShapeAtlas[i]);
 		}
 		/*this.mEnemy = new Enemy[ENEMY_SIZE];
 		for (int i = 0; i < mEnemy.length; i++) {
@@ -220,8 +240,13 @@ public class PlayGameActivity extends BaseGameActivity implements
 		//mLifeHUD.attachChild(lifeHUDBackground);
 		//mLifeHUD.attachChild(statusBackground);
 		CreateAnswerButton();
+		CreateQuestion();
 		
 		this.m_Camera.setHUD(m_TopHUD);
+		
+		m_mainScene.setTouchAreaBindingEnabled(true);
+		m_mainScene.setOnAreaTouchListener(this);
+		m_mainScene.setOnSceneTouchListener(this);
 		
 		return m_mainScene;
 	}
