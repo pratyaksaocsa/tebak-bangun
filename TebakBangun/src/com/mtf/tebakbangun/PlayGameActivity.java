@@ -53,7 +53,7 @@ import android.graphics.Typeface;
 public class PlayGameActivity extends BaseGameActivity implements 
 		IOnSceneTouchListener, IOnAreaTouchListener, IAnimationListener {
 
-	private static final int CAMERA_WIDTH = 720;
+	private static final int CAMERA_WIDTH = 800;
 	private static final int CAMERA_HEIGHT = 480;
 
 	private enum SHAPE
@@ -67,6 +67,27 @@ public class PlayGameActivity extends BaseGameActivity implements
 
 	    public int getValue() {
 	        return value;
+	    }
+	    
+	    public static String getString(int value)
+	    {
+	    	switch(value)
+	    	{
+	    		case 0:
+	    			return "KUBUS";
+	    		case 1:
+	    			return "BALOK";
+	    		case 2:
+	    			return "TABUNG";
+	    		case 3:
+	    			return "KERUCUT";
+	    		case 4:
+	    			return "PIRAMIDA";
+	    		case 6:
+	    			return "BOLA";
+	    		default:
+	    			return "TIDAK DIKENAL";
+	    	}
 	    }
 	};
 
@@ -82,10 +103,10 @@ public class PlayGameActivity extends BaseGameActivity implements
 	private EngineOptions m_engineOptions;
 	
 	private GameHUD m_TopHUD;
-	private int score = 0;
-	private ChangeableText mScoreTextValue, mLevelText;
+	private int score = 0, level = 1;
+	private ChangeableText mScoreTextValue, mLevelTextValue;
 	//public static ChangeableText mGoldTextValue;
-	private Text mScoreText;
+	private Text mScoreText, mLevelText;
 	
 	BitmapTextureAtlas mAnswerTextureAtlas;
 	TextureRegion mAnswerTexture;
@@ -93,7 +114,8 @@ public class PlayGameActivity extends BaseGameActivity implements
 	BitmapTextureAtlas[] m_BasicShapeAtlas;
 	PixelPerfectTiledTextureRegion[] m_BasicShapeTiledTextureRegion;
 	String m_BasicShapeFilename[] = {"shape1.png","shape2.png","shape3.png","shape1.png","shape2.png","shape3.png"};
-
+	BasicShapeAnimated questions[];
+	
 	public void addScore() {
 		this.score += 10;
 		mScoreTextValue.setText(String.valueOf(score));
@@ -109,6 +131,15 @@ public class PlayGameActivity extends BaseGameActivity implements
 		return m_mainScene;
 	}
 	
+	public void NextQuestion()
+	{
+		m_mainScene.detachChild(questions[level%6]);
+		this.level += 1;
+		mLevelTextValue.setText(String.valueOf(this.level));
+		CreateAnswerButton();
+		CreateQuestion();
+	}
+	
 	private void CreateAnswerButton()
 	{
 		AnswerButton answers[] = new AnswerButton[3];
@@ -118,7 +149,9 @@ public class PlayGameActivity extends BaseGameActivity implements
 		for(int i=0;i<3;i++)
 		{
 			pX += AnswerButton.PADDING;
-			answers[i] = new AnswerButton(mAnswerTexture, m_Font, "KUBUS", this);
+			//TODO: Do not Random it
+			String answerText = SHAPE.getString((int)(Math.random() * 5));
+			answers[i] = new AnswerButton(mAnswerTexture, m_Font, answerText, this);
 			if(i == correctAnswer)
 				answers[i].SetIsCorrectAnswer(true);
 			answers[i].setPosition(pX, pY);
@@ -133,11 +166,12 @@ public class PlayGameActivity extends BaseGameActivity implements
 		int QUESTION_WIDTH = 200, QUESTION_HEIGHT = 200;
 		final int centerX = CAMERA_WIDTH / 2;
 		final int centerY = CAMERA_HEIGHT / 2;
-		BasicShapeAnimated question = new BasicShapeAnimated(centerX-(QUESTION_WIDTH/2), centerY-(QUESTION_HEIGHT/2), 
-				QUESTION_WIDTH, QUESTION_HEIGHT, m_BasicShapeTiledTextureRegion[0], this);
-		m_mainScene.registerTouchArea(question);
-		m_mainScene.attachChild(question);
-		question.animate(100);
+		//TODO: This will create an infinity question
+		questions[level%6] = new BasicShapeAnimated(centerX-(QUESTION_WIDTH/2), centerY-(QUESTION_HEIGHT/2), 
+				QUESTION_WIDTH, QUESTION_HEIGHT, m_BasicShapeTiledTextureRegion[(level-1)%6], this);
+		m_mainScene.registerTouchArea(questions[level%6]);
+		m_mainScene.attachChild(questions[level%6]);
+		questions[level%6].animate(100);
 	}
 	
 	@Override
@@ -165,6 +199,7 @@ public class PlayGameActivity extends BaseGameActivity implements
 		this.mEngine.getFontManager().loadFont(m_Font);
 		
 		// load shape
+		questions = new BasicShapeAnimated[SHAPE.COUNT.getValue()];
 		this.m_BasicShapeAtlas = new BitmapTextureAtlas[SHAPE.COUNT.getValue()];
 		this.m_BasicShapeTiledTextureRegion = new PixelPerfectTiledTextureRegion[SHAPE.COUNT.getValue()];
 		for (int i = 0; i < m_BasicShapeAtlas.length; i++) {
@@ -227,13 +262,19 @@ public class PlayGameActivity extends BaseGameActivity implements
 		Sprite background = new Sprite(centerX, centerY, m_BackgroundTextureRegion);
 		m_mainScene.attachChild(background);
 		
-		mScoreText = new Text(400, 5, this.m_Font, "Score :", HorizontalAlign.LEFT);
+		mScoreText = new Text(400, 5, this.m_Font, "Score:", HorizontalAlign.LEFT);
 		mScoreTextValue = new ChangeableText(400 + mScoreText.getWidth() + 5, 5, this.m_Font, score + "", 
 				HorizontalAlign.LEFT, 10);
+		mLevelText = new Text(0,5, this.m_Font, "Level:", HorizontalAlign.LEFT);
+		mLevelTextValue = new ChangeableText(mLevelText.getWidth() + 5, 5, this.m_Font, level+"",
+				HorizontalAlign.LEFT, 1);
+		
 		
 		m_TopHUD = new GameHUD(this.m_Camera, 0, 0, CAMERA_WIDTH, 15);
 		m_TopHUD.attachChild(mScoreText);
 		m_TopHUD.attachChild(mScoreTextValue);
+		m_TopHUD.attachChild(mLevelText);
+		m_TopHUD.attachChild(mLevelTextValue);
 		//mLifeHUD.setFrameColor(0.0f, 0.0f, 0.0f, 0.0f);
 		//mLifeHUD.setBackColor(1.0f, 0.0f, 0.0f, 1.0f);
 		//mLifeHUD.setProgressColor(0.0f, 1.0f, 0.0f, 1.0f);
@@ -248,6 +289,7 @@ public class PlayGameActivity extends BaseGameActivity implements
 		m_mainScene.setOnAreaTouchListener(this);
 		m_mainScene.setOnSceneTouchListener(this);
 		
+		mBackgroundMusic.play();
 		return m_mainScene;
 	}
 

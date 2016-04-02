@@ -38,7 +38,7 @@ public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemCli
 	// ===========================================================
 	// Constants
 	// ===========================================================
-	private static final int CAMERA_WIDTH = 720;
+	private static final int CAMERA_WIDTH = 800;
 	private static final int CAMERA_HEIGHT = 480;
 	
 	private static class MENU
@@ -78,13 +78,12 @@ public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemCli
 	@Override
 	public void onLoadResources() {
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-		this.mBackgroundTextureAtlas = new BitmapTextureAtlas(1024, 1024,
+		this.mBackgroundTextureAtlas = new BitmapTextureAtlas(800, 480,
 				TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mBackgroundTexture = BitmapTextureAtlasTextureRegionFactory
 				.createFromAsset(this.mBackgroundTextureAtlas, this,
 						"menubg.png", 0, 0);
-		this.mEngine.getTextureManager().loadTexture(
-				this.mBackgroundTextureAtlas);
+		this.mEngine.getTextureManager().loadTexture(this.mBackgroundTextureAtlas);
 		this.mFontTextureAtlas = new BitmapTextureAtlas(256, 256,TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		FontFactory.setAssetBasePath("font/");
 		this.mFont = FontFactory.createFromAsset(mFontTextureAtlas, this, "PORKYS_.TTF", 32, true, Color.RED);

@@ -13,7 +13,7 @@ public class AnswerButton extends Sprite {
 
 	private boolean m_isCorrectAnswer;
 	private PlayGameActivity m_playGameActivity;
-	public static final int ANSWER_WIDTH = 200, ANSWER_HEIGHT = 75, PADDING = 20;
+	public static final int ANSWER_WIDTH = 200, ANSWER_HEIGHT = 75, PADDING = 30;
 	
 	public void SetIsCorrectAnswer(boolean answer)
 	{
@@ -39,11 +39,12 @@ public class AnswerButton extends Sprite {
 	{
 		if (pSceneTouchEvent.isActionUp())
 		{
+			m_playGameActivity.getClickSound().play();
 			if(m_isCorrectAnswer)
 			{
 				m_playGameActivity.addScore();
+				m_playGameActivity.NextQuestion();
 			}
-			m_playGameActivity.getClickSound().play();
 			return true;
 		}
 		return false;
