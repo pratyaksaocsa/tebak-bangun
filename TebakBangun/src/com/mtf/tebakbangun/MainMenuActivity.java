@@ -78,11 +78,11 @@ public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemCli
 	@Override
 	public void onLoadResources() {
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-		this.mBackgroundTextureAtlas = new BitmapTextureAtlas(800, 480,
+		this.mBackgroundTextureAtlas = new BitmapTextureAtlas(1024, 512,
 				TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.mBackgroundTexture = BitmapTextureAtlasTextureRegionFactory
 				.createFromAsset(this.mBackgroundTextureAtlas, this,
-						"menubg.png", 0, 0);
+						"menu.png", 0, 0);
 		this.mEngine.getTextureManager().loadTexture(this.mBackgroundTextureAtlas);
 		this.mFontTextureAtlas = new BitmapTextureAtlas(256, 256,TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		FontFactory.setAssetBasePath("font/");
