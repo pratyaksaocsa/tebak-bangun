@@ -8,12 +8,9 @@ import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 import com.mtf.tebakbangun.PlayGameActivity;
 
 public class BasicShapeAnimated extends AnimatedSprite {
-
-	private PlayGameActivity m_playGameActivity;
 	
-	public BasicShapeAnimated(float pX, float pY, float pWidth, float pHeight, TiledTextureRegion pTextureRegion, PlayGameActivity play) {
+	public BasicShapeAnimated(float pX, float pY, float pWidth, float pHeight, TiledTextureRegion pTextureRegion) {
 		super(pX, pY, pWidth, pHeight, pTextureRegion);
-		m_playGameActivity = play;
 	}
 	
 	@Override
