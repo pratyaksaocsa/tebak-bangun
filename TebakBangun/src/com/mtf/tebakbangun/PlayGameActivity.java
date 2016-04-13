@@ -122,33 +122,32 @@ public class PlayGameActivity extends BaseGameActivity implements
 	{
 		if (level < 4)
 		{
-			m_mainScene.detachChild(questions[level]);
+			questions[level].Destroy();
 			this.level += 1;
 			mLevelTextValue.setText(String.valueOf(this.level+1));
-			CreateQuestion(this.level);
+			ShowQuestion(this.level);
 		}
 		else
 		{
 			//USER WIN
 			mScoreTextValue.setText("YOU WIN!!");
+			level = 0;
 		}
 	}
 	
-	private void CreateQuestion(int level)
+	private void CreateQuestion()
 	{
-		try{
-			questions = new Questions[5]; //Because we just have 5 levels
-			for(int i=0;i<5;i++)
-			{
-				questions[i] = new Questions(m_BackgroundTextureRegion, mAnswerTextureRegion, m_BasicShapeTiledTextureRegion[level],m_Font);
-			}
-			m_mainScene.registerTouchArea(questions[level]);
-			m_mainScene.attachChild(questions[level]);
-		}
-		catch(Exception x)
+		questions = new Questions[5]; //Because we just have 5 levels
+		for(int i=0;i<5;i++)
 		{
-			Log.d("Ocsa", "ERROR: Level = "+this.level);
+			questions[i] = new Questions(i, m_BackgroundTextureRegion, mAnswerTextureRegion, m_BasicShapeTiledTextureRegion[level],m_Font);
 		}
+	}
+	
+	private void ShowQuestion(int level)
+	{
+		Log.d("Ocsa", "Showing Q"+level);
+		m_mainScene.attachChild(questions[level]);
 	}
 	
 	@Override
@@ -180,11 +179,9 @@ public class PlayGameActivity extends BaseGameActivity implements
 		this.m_BasicShapeAtlas = new BitmapTextureAtlas[6]; //Because we only have 6 shape
 		this.m_BasicShapeTiledTextureRegion = new PixelPerfectTiledTextureRegion[6]; //Because we only have 6 shape
 		for (int i = 0; i < m_BasicShapeAtlas.length; i++) {
-			this.m_BasicShapeAtlas[i] = new BitmapTextureAtlas(512, 512,
-					TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+			this.m_BasicShapeAtlas[i] = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 			this.m_BasicShapeTiledTextureRegion[i] = PixelPerfectTextureRegionFactory
-					.createTiledFromAsset(m_BasicShapeAtlas[i], this, m_BasicShapeFilename[i], 0, 0,
-							4, 2);
+					.createTiledFromAsset(m_BasicShapeAtlas[i], this, m_BasicShapeFilename[i], 0, 0, 4, 2);
 		}
 		for (int i = 0; i < m_BasicShapeFilename.length; i++) {
 			this.mEngine.getTextureManager().loadTexture(m_BasicShapeAtlas[i]);
@@ -266,13 +263,14 @@ public class PlayGameActivity extends BaseGameActivity implements
 		m_mainScene.setOnSceneTouchListener(this);
 		
 		mBackgroundMusic.play();
-		CreateQuestion(level);
+		CreateQuestion();
+		ShowQuestion(level);
 		return m_mainScene;
 	}
 
 	@Override
 	public void onLoadComplete() {
-		// TODO Auto-generated method stub
+
 	}
 
 	@Override

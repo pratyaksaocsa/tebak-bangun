@@ -1,5 +1,8 @@
 package com.mtf.tebakbangun.model;
 
+import java.util.Random;
+
+import org.anddev.andengine.entity.IEntity;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.opengl.font.Font;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
@@ -8,8 +11,11 @@ import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 import com.mtf.tebakbangun.PlayGameActivity;
 import com.qwerjk.andengine.opengl.texture.region.PixelPerfectTiledTextureRegion;
 
+import android.util.Log;
+
 public class Questions extends Sprite {
 	
+	private int ID;
 	AnswerButton answerButtons[];
 	private TextureRegion mAnswerTextureRegion;
 	private TiledTextureRegion mShapeTextureRegion;
@@ -19,7 +25,7 @@ public class Questions extends Sprite {
 	
 	public enum SHAPE
 	{
-		CUBE(0),BLOCK(1),TUBE(2),CONE(3),PYRAMID(4),BALL(5),COUNT(6);
+		CUBE(5),BLOCK(1),TUBE(2),CONE(3),PYRAMID(4),BALL(0),COUNT(6);
 		private int value;
 		
 		private SHAPE(int value) {
@@ -35,7 +41,7 @@ public class Questions extends Sprite {
 	    	switch(value)
 	    	{
 	    		case 0:
-	    			return "KUBUS";
+	    			return "BOLA";
 	    		case 1:
 	    			return "BALOK";
 	    		case 2:
@@ -44,17 +50,18 @@ public class Questions extends Sprite {
 	    			return "KERUCUT";
 	    		case 4:
 	    			return "PIRAMIDA";
-	    		case 6:
-	    			return "BOLA";
+	    		case 5:
+	    			return "KUBUS";
 	    		default:
 	    			return "TIDAK DIKENAL";
 	    	}
 	    }
 	};
 	
-	public Questions(TextureRegion backgroundTexture, TextureRegion answerTexture, PixelPerfectTiledTextureRegion shapeTexture, Font mFont)
+	public Questions(int id, TextureRegion backgroundTexture, TextureRegion answerTexture, PixelPerfectTiledTextureRegion shapeTexture, Font mFont)
 	{
 		super(0, 0, PlayGameActivity.getInstance().CAMERA_WIDTH, PlayGameActivity.getInstance().CAMERA_HEIGHT, backgroundTexture);
+		this.ID = id;
 		mAnswerTextureRegion = answerTexture;
 		mShapeTextureRegion = shapeTexture;
 		m_Font = mFont;
@@ -62,20 +69,44 @@ public class Questions extends Sprite {
 		InitShape();
 	}
 	
+	public void Destroy()
+	{
+		for(int i=0;i<3;i++)
+		{
+			PlayGameActivity.getInstance().getMainScene().unregisterTouchArea(answerButtons[i]);
+			this.detachChild(answerButtons[i]);
+		}
+		this.detachChild(image);
+	}
+	
 	private void InitAnswerButton()
 	{
 		answerButtons = new AnswerButton[3];
-		int correctAnswer = (int)(Math.random() * 3);
+		Random rn = new Random();
+		int correctAnswer = rn.nextInt(3);
 		int pX = 0;
 		int pY = PlayGameActivity.getInstance().CAMERA_HEIGHT - AnswerButton.ANSWER_HEIGHT;
 		for(int i=0;i<3;i++)
 		{
 			pX += AnswerButton.PADDING;
-			//TODO: Do not Random it
-			String answerText = SHAPE.getString((int)(Math.random() * 5));
-			answerButtons[i] = new AnswerButton(mAnswerTextureRegion, m_Font, answerText);
+			answerButtons[i] = new AnswerButton(mAnswerTextureRegion, m_Font, "");
 			if(i == correctAnswer)
+			{
+				String answerText = SHAPE.getString(this.ID);
+				answerButtons[i].SetText(answerText);
 				answerButtons[i].SetIsCorrectAnswer(true);
+			}
+			else
+			{
+				//int ans = -1;
+				//do
+				//{
+				//	ans = (int)(Math.random() * 5);
+				//} while (ans == this.ID);
+				//String answerText = SHAPE.getString(ans);
+				//answerButtons[i].SetText(answerText);
+				//answerButtons[i].SetIsCorrectAnswer(false);
+			}
 			answerButtons[i].setPosition(pX, pY);
 			pX += AnswerButton.ANSWER_WIDTH;
 			pX += AnswerButton.PADDING;
