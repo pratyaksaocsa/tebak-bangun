@@ -146,7 +146,6 @@ public class PlayGameActivity extends BaseGameActivity implements
 	
 	private void ShowQuestion(int level)
 	{
-		Log.d("Ocsa", "Showing Q"+level);
 		m_mainScene.attachChild(questions[level]);
 	}
 	
