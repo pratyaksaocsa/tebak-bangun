@@ -140,7 +140,7 @@ public class PlayGameActivity extends BaseGameActivity implements
 		questions = new Questions[5]; //Because we just have 5 levels
 		for(int i=0;i<5;i++)
 		{
-			questions[i] = new Questions(i, m_BackgroundTextureRegion, mAnswerTextureRegion, m_BasicShapeTiledTextureRegion[level],m_Font);
+			questions[i] = new Questions(i, m_BackgroundTextureRegion, mAnswerTextureRegion, m_BasicShapeTiledTextureRegion[i],m_Font);
 		}
 	}
 	
