@@ -86,6 +86,7 @@ public class Questions extends Sprite {
 		int correctAnswer = rn.nextInt(3);
 		int pX = 0;
 		int pY = PlayGameActivity.getInstance().CAMERA_HEIGHT - AnswerButton.ANSWER_HEIGHT;
+		int usedAnswer = -1;
 		for(int i=0;i<3;i++)
 		{
 			pX += AnswerButton.PADDING;
@@ -98,14 +99,17 @@ public class Questions extends Sprite {
 			}
 			else
 			{
-				//int ans = -1;
-				//do
-				//{
-				//	ans = (int)(Math.random() * 5);
-				//} while (ans == this.ID);
-				//String answerText = SHAPE.getString(ans);
-				//answerButtons[i].SetText(answerText);
-				//answerButtons[i].SetIsCorrectAnswer(false);
+				int ans = -1;
+				boolean doAgain = true;
+				do
+				{
+					ans = rn.nextInt(6);
+					doAgain = (ans == this.ID || ans == usedAnswer);
+				} while (doAgain);
+				usedAnswer = ans;	
+				String answerText = SHAPE.getString(ans);
+				answerButtons[i].SetText(answerText);
+				answerButtons[i].SetIsCorrectAnswer(false);
 			}
 			answerButtons[i].setPosition(pX, pY);
 			pX += AnswerButton.ANSWER_WIDTH;
