@@ -58,13 +58,13 @@ public class Questions extends Sprite {
 	    }
 	};
 	
-	public Questions(int id, TextureRegion backgroundTexture, TextureRegion answerTexture, PixelPerfectTiledTextureRegion shapeTexture, Font mFont)
+	public Questions(int id, TextureRegion backgroundTexture, TextureRegion answerTexture, PixelPerfectTiledTextureRegion shapeTexture)
 	{
 		super(0, 0, PlayGameActivity.getInstance().CAMERA_WIDTH, PlayGameActivity.getInstance().CAMERA_HEIGHT, backgroundTexture);
 		this.ID = id;
 		mAnswerTextureRegion = answerTexture;
 		mShapeTextureRegion = shapeTexture;
-		m_Font = mFont;
+		m_Font = PlayGameActivity.getInstance().getFont();
 		InitAnswerButton();
 		InitShape();
 	}

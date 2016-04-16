@@ -90,9 +90,9 @@ public class PlayGameActivity extends BaseGameActivity implements
 	
 	private GameHUD m_TopHUD;
 	private int score = 0, level = 0;
-	private ChangeableText mScoreTextValue, mLevelTextValue;
+	//private ChangeableText mScoreTextValue, mLevelTextValue;
 	//public static ChangeableText mGoldTextValue;
-	private Text mScoreText, mLevelText;
+	//private Text mScoreText, mLevelText;
 	
 	BitmapTextureAtlas mAnswerTextureAtlas;
 	TextureRegion mAnswerTextureRegion;
@@ -105,7 +105,7 @@ public class PlayGameActivity extends BaseGameActivity implements
 	
 	public void addScore() {
 		this.score += 10;
-		mScoreTextValue.setText(String.valueOf(score));
+		m_TopHUD.SetScore(String.valueOf(score));
 	}
 	
 	public Sound getClickSound()
@@ -118,19 +118,24 @@ public class PlayGameActivity extends BaseGameActivity implements
 		return m_mainScene;
 	}
 	
+	public Font getFont()
+	{
+		return m_Font;
+	}
+	
 	public void NextQuestion()
 	{
 		if (level < 4)
 		{
 			questions[level].Destroy();
 			this.level += 1;
-			mLevelTextValue.setText(String.valueOf(this.level+1));
+			m_TopHUD.SetLevel(String.valueOf(this.level+1));
 			ShowQuestion(this.level);
 		}
 		else
 		{
 			//USER WIN
-			mScoreTextValue.setText("YOU WIN!!");
+			m_TopHUD.SetScore("YOU WIN!!");
 			level = 0;
 		}
 	}
@@ -140,7 +145,7 @@ public class PlayGameActivity extends BaseGameActivity implements
 		questions = new Questions[5]; //Because we just have 5 levels
 		for(int i=0;i<5;i++)
 		{
-			questions[i] = new Questions(i, m_BackgroundTextureRegion, mAnswerTextureRegion, m_BasicShapeTiledTextureRegion[i],m_Font);
+			questions[i] = new Questions(i, m_BackgroundTextureRegion, mAnswerTextureRegion, m_BasicShapeTiledTextureRegion[i]);
 		}
 	}
 	
@@ -235,26 +240,8 @@ public class PlayGameActivity extends BaseGameActivity implements
 		//final int centerY = (CAMERA_HEIGHT - this.m_BackgroundTextureRegion.getHeight()) / 2;
 		//Sprite background = new Sprite(centerX, centerY, m_BackgroundTextureRegion);
 		//m_mainScene.attachChild(background);
-		
-		mScoreText = new Text(400, 5, this.m_Font, "Score:", HorizontalAlign.LEFT);
-		mScoreTextValue = new ChangeableText(400 + mScoreText.getWidth() + 5, 5, this.m_Font, score + "", 
-				HorizontalAlign.LEFT, 10);
-		mLevelText = new Text(0,5, this.m_Font, "Level:", HorizontalAlign.LEFT);
-		mLevelTextValue = new ChangeableText(mLevelText.getWidth() + 5, 5, this.m_Font, (level+1)+"",
-				HorizontalAlign.LEFT, 1);
-		
-		
+
 		m_TopHUD = new GameHUD(this.m_Camera, 0, 0, CAMERA_WIDTH, 15);
-		m_TopHUD.attachChild(mScoreText);
-		m_TopHUD.attachChild(mScoreTextValue);
-		m_TopHUD.attachChild(mLevelText);
-		m_TopHUD.attachChild(mLevelTextValue);
-		//mLifeHUD.setFrameColor(0.0f, 0.0f, 0.0f, 0.0f);
-		//mLifeHUD.setBackColor(1.0f, 0.0f, 0.0f, 1.0f);
-		//mLifeHUD.setProgressColor(0.0f, 1.0f, 0.0f, 1.0f);
-		//mLifeHUD.attachChild(lifeHUDBackground);
-		//mLifeHUD.attachChild(statusBackground);
-		
 		this.m_Camera.setHUD(m_TopHUD);
 		
 		m_mainScene.setTouchAreaBindingEnabled(true);
