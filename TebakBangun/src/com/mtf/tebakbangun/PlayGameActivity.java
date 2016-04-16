@@ -90,9 +90,6 @@ public class PlayGameActivity extends BaseGameActivity implements
 	
 	private GameHUD m_TopHUD;
 	private int score = 0, level = 0;
-	//private ChangeableText mScoreTextValue, mLevelTextValue;
-	//public static ChangeableText mGoldTextValue;
-	//private Text mScoreText, mLevelText;
 	
 	BitmapTextureAtlas mAnswerTextureAtlas;
 	TextureRegion mAnswerTextureRegion;
