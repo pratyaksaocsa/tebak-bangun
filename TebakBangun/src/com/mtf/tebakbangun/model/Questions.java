@@ -2,7 +2,6 @@ package com.mtf.tebakbangun.model;
 
 import java.util.Random;
 
-import org.anddev.andengine.entity.IEntity;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.opengl.font.Font;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
@@ -10,8 +9,6 @@ import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 
 import com.mtf.tebakbangun.PlayGameActivity;
 import com.qwerjk.andengine.opengl.texture.region.PixelPerfectTiledTextureRegion;
-
-import android.util.Log;
 
 public class Questions extends Sprite {
 	
@@ -25,7 +22,7 @@ public class Questions extends Sprite {
 	
 	public enum SHAPE
 	{
-		CUBE(5),BLOCK(1),TUBE(2),CONE(3),PYRAMID(4),BALL(0),COUNT(6);
+		CUBE(0),BLOCK(1),TUBE(2),CONE(3),PYRAMID(4),BALL(5),COUNT(6);
 		private int value;
 		
 		private SHAPE(int value) {

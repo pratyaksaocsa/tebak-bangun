@@ -94,9 +94,11 @@ public class PlayGameActivity extends BaseGameActivity implements
 	BitmapTextureAtlas mAnswerTextureAtlas;
 	TextureRegion mAnswerTextureRegion;
 	
-	BitmapTextureAtlas[] m_BasicShapeAtlas;
-	PixelPerfectTiledTextureRegion[] m_BasicShapeTiledTextureRegion;
-	String m_BasicShapeFilename[] = {"shape1.png","shape2.png","shape3.png","shape1.png","shape2.png","shape3.png"};
+	BitmapTextureAtlas[] m_Level1ShapeAtlas, m_Level2ShapeAtlas, m_Level3ShapeAtlas;
+	PixelPerfectTiledTextureRegion[] m_Level1TiledTextureRegion, m_Level2TiledTextureRegion, m_Level3TiledTextureRegion;
+	String m_Level1Filename[] = {"cube.png","block.png","tube.png","cone.png","pyramid.png","ball.png"};
+	String m_Level2Filename[] = {"blockball.png", "conecube.png", "pyramidtube.png"};
+	String m_Level3Filename[] = {"tublock.png", "pyracube.png", "coneball.png"};
 	
 	Questions questions[];
 	
@@ -142,7 +144,7 @@ public class PlayGameActivity extends BaseGameActivity implements
 		questions = new Questions[5]; //Because we just have 5 levels
 		for(int i=0;i<5;i++)
 		{
-			questions[i] = new Questions(i, m_BackgroundTextureRegion, mAnswerTextureRegion, m_BasicShapeTiledTextureRegion[i]);
+			questions[i] = new Questions(i, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level1TiledTextureRegion[i]);
 		}
 	}
 	
@@ -177,21 +179,36 @@ public class PlayGameActivity extends BaseGameActivity implements
 		this.mEngine.getFontManager().loadFont(m_Font);
 		
 		// load shape
-		this.m_BasicShapeAtlas = new BitmapTextureAtlas[6]; //Because we only have 6 shape
-		this.m_BasicShapeTiledTextureRegion = new PixelPerfectTiledTextureRegion[6]; //Because we only have 6 shape
-		for (int i = 0; i < m_BasicShapeAtlas.length; i++) {
-			this.m_BasicShapeAtlas[i] = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-			this.m_BasicShapeTiledTextureRegion[i] = PixelPerfectTextureRegionFactory
-					.createTiledFromAsset(m_BasicShapeAtlas[i], this, m_BasicShapeFilename[i], 0, 0, 4, 2);
+		this.m_Level1ShapeAtlas = new BitmapTextureAtlas[6]; //Because we only have 6 shape for level 1
+		this.m_Level2ShapeAtlas = new BitmapTextureAtlas[3]; //Because we only have 3 shape for level 2
+		this.m_Level3ShapeAtlas = new BitmapTextureAtlas[3]; //Because we only have 3 shape for level 3
+		this.m_Level1TiledTextureRegion = new PixelPerfectTiledTextureRegion[6]; //Because we only have 6 shape for level 1
+		this.m_Level2TiledTextureRegion = new PixelPerfectTiledTextureRegion[3]; //Because we only have 3 shape for level 2
+		this.m_Level3TiledTextureRegion = new PixelPerfectTiledTextureRegion[3]; //Because we only have 3 shape for level 3
+		for (int i = 0; i < m_Level1ShapeAtlas.length; i++) {
+			this.m_Level1ShapeAtlas[i] = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+			this.m_Level1TiledTextureRegion[i] = PixelPerfectTextureRegionFactory
+					.createTiledFromAsset(m_Level1ShapeAtlas[i], this, m_Level1Filename[i], 0, 0, 4, 2);
 		}
-		for (int i = 0; i < m_BasicShapeFilename.length; i++) {
-			this.mEngine.getTextureManager().loadTexture(m_BasicShapeAtlas[i]);
+		for (int i = 0; i < m_Level2ShapeAtlas.length; i++) {
+			this.m_Level2ShapeAtlas[i] = new BitmapTextureAtlas(1024, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+			this.m_Level2TiledTextureRegion[i] = PixelPerfectTextureRegionFactory
+					.createTiledFromAsset(m_Level2ShapeAtlas[i], this, m_Level2Filename[i], 0, 0, 4, 2);
 		}
-		/*this.mEnemy = new Enemy[ENEMY_SIZE];
-		for (int i = 0; i < mEnemy.length; i++) {
-			this.mEnemy[i] = new Enemy(0, 0,
-					mEnemyPerfectTiledTextureRegion[i], mFont, i);
-		}*/
+		for (int i = 0; i < m_Level3ShapeAtlas.length; i++) {
+			this.m_Level3ShapeAtlas[i] = new BitmapTextureAtlas(1024, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+			this.m_Level3TiledTextureRegion[i] = PixelPerfectTextureRegionFactory
+					.createTiledFromAsset(m_Level3ShapeAtlas[i], this, m_Level3Filename[i], 0, 0, 4, 2);
+		}
+		for (int i = 0; i < m_Level1Filename.length; i++) {
+			this.mEngine.getTextureManager().loadTexture(m_Level1ShapeAtlas[i]);
+		}
+		for (int i = 0; i < m_Level2Filename.length; i++) {
+			this.mEngine.getTextureManager().loadTexture(m_Level2ShapeAtlas[i]);
+		}
+		for (int i = 0; i < m_Level3Filename.length; i++) {
+			this.mEngine.getTextureManager().loadTexture(m_Level3ShapeAtlas[i]);
+		}
 		
 		// load background
 		this.m_BackgroundAtlas = new BitmapTextureAtlas(1024, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
