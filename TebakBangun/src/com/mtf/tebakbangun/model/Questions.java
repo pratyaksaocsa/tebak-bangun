@@ -38,7 +38,7 @@ public class Questions extends Sprite {
 	    	switch(value)
 	    	{
 	    		case 0:
-	    			return "BOLA";
+	    			return "KUBUS";
 	    		case 1:
 	    			return "BALOK";
 	    		case 2:
@@ -48,7 +48,7 @@ public class Questions extends Sprite {
 	    		case 4:
 	    			return "PIRAMIDA";
 	    		case 5:
-	    			return "KUBUS";
+	    			return "BOLA";
 	    		default:
 	    			return "TIDAK DIKENAL";
 	    	}
