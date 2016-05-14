@@ -1,6 +1,7 @@
 package com.mtf.tebakbangun;
 
 import java.io.IOException;
+import java.util.Random;
 
 import org.anddev.andengine.audio.music.Music;
 import org.anddev.andengine.audio.music.MusicFactory;
@@ -142,10 +143,25 @@ public class PlayGameActivity extends BaseGameActivity implements
 	private void CreateQuestion()
 	{
 		questions = new Questions[5]; //Because we just have 5 levels
-		for(int i=0;i<5;i++)
+		Random rn = new Random();
+		int indexLevel1 = rn.nextInt(6);
+		int indexLevel2_1 = -1, indexLevel2_2 = -1;
+		do
 		{
-			questions[i] = new Questions(i, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level1TiledTextureRegion[i]);
-		}
+			indexLevel2_1 = rn.nextInt(3);
+			indexLevel2_2 = rn.nextInt(3);
+		} while (indexLevel2_1 == indexLevel2_2);
+		int indexLevel3_1 = -1, indexLevel3_2 = -1;
+		do
+		{
+			indexLevel3_1 = rn.nextInt(3);
+			indexLevel3_2 = rn.nextInt(3);
+		} while (indexLevel3_1 == indexLevel3_2);
+		questions[0] = new Questions(0, 1, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level1TiledTextureRegion[indexLevel1]);
+		questions[1] = new Questions(1, 2, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level2TiledTextureRegion[indexLevel2_1]);
+		questions[2] = new Questions(2, 3, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level2TiledTextureRegion[indexLevel2_2]);
+		questions[3] = new Questions(3, 4, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level3TiledTextureRegion[indexLevel3_1]);
+		questions[4] = new Questions(4, 5, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level3TiledTextureRegion[indexLevel3_2]);
 	}
 	
 	private void ShowQuestion(int level)

@@ -13,6 +13,7 @@ import com.qwerjk.andengine.opengl.texture.region.PixelPerfectTiledTextureRegion
 public class Questions extends Sprite {
 	
 	private int ID;
+	private int forLevel;
 	AnswerButton answerButtons[];
 	private TextureRegion mAnswerTextureRegion;
 	private TiledTextureRegion mShapeTextureRegion;
@@ -55,10 +56,11 @@ public class Questions extends Sprite {
 	    }
 	};
 	
-	public Questions(int id, TextureRegion backgroundTexture, TextureRegion answerTexture, PixelPerfectTiledTextureRegion shapeTexture)
+	public Questions(int id, int level, TextureRegion backgroundTexture, TextureRegion answerTexture, PixelPerfectTiledTextureRegion shapeTexture)
 	{
 		super(0, 0, PlayGameActivity.getInstance().CAMERA_WIDTH, PlayGameActivity.getInstance().CAMERA_HEIGHT, backgroundTexture);
 		this.ID = id;
+		this.forLevel = level;
 		mAnswerTextureRegion = answerTexture;
 		mShapeTextureRegion = shapeTexture;
 		m_Font = PlayGameActivity.getInstance().getFont();
