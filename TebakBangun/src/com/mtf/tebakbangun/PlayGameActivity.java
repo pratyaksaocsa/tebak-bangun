@@ -82,9 +82,9 @@ public class PlayGameActivity extends BaseGameActivity implements
 	private Scene m_mainScene;
 	BitmapTextureAtlas m_BackgroundAtlas;
 	TextureRegion m_BackgroundTextureRegion;
-	private BitmapTextureAtlas m_FontTextureAtlas;
+	private BitmapTextureAtlas m_FontTextureAtlas, m_FontTextureAtlas2;
 	protected Font m_Font;
-	private BitmapTextureAtlas m_FontTexture;
+	protected Font m_FontForQuestionText;
 	private Music mBackgroundMusic;
 	private Sound mClickSound;
 	private EngineOptions m_engineOptions;
@@ -172,6 +172,11 @@ public class PlayGameActivity extends BaseGameActivity implements
 	private void ShowQuestion(int level)
 	{
 		m_mainScene.attachChild(questions[level]);
+		Text questionText = new Text(0, 0, m_FontForQuestionText, "Bangun ruang apakah ini?", HorizontalAlign.CENTER);
+		final int positionX = (int) ((CAMERA_WIDTH - questionText.getWidth())/2);
+		final int positionY = (int) (((CAMERA_HEIGHT - questionText.getHeight())/2)-150);
+		questionText.setPosition(positionX, positionY);
+		m_mainScene.attachChild(questionText);
 	}
 	
 	@Override
@@ -195,9 +200,13 @@ public class PlayGameActivity extends BaseGameActivity implements
 		
 		// load font
 		this.m_FontTextureAtlas = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		this.m_FontTextureAtlas2 = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		this.m_Font = FontFactory.createFromAsset(m_FontTextureAtlas, this, "PORKYS_.TTF", 20, true, Color.BLACK);
+		this.m_FontForQuestionText = FontFactory.createFromAsset(m_FontTextureAtlas2, this, "PORKYS_.TTF", 30, true, Color.BLACK);
 		this.mEngine.getTextureManager().loadTexture(this.m_FontTextureAtlas);
+		this.mEngine.getTextureManager().loadTexture(this.m_FontTextureAtlas2);
 		this.mEngine.getFontManager().loadFont(m_Font);
+		this.mEngine.getFontManager().loadFont(m_FontForQuestionText);
 		
 		// load shape
 		this.m_Level1ShapeAtlas = new BitmapTextureAtlas[6]; //Because we only have 6 shape for level 1
@@ -271,10 +280,6 @@ public class PlayGameActivity extends BaseGameActivity implements
 		mEngine.registerUpdateHandler(new FPSLogger());
 		m_mainScene = new Scene();
 		instance = this;
-		//final int centerX = (CAMERA_WIDTH - this.m_BackgroundTextureRegion.getWidth()) / 2;
-		//final int centerY = (CAMERA_HEIGHT - this.m_BackgroundTextureRegion.getHeight()) / 2;
-		//Sprite background = new Sprite(centerX, centerY, m_BackgroundTextureRegion);
-		//m_mainScene.attachChild(background);
 
 		m_TopHUD = new GameHUD(this.m_Camera, 0, 0, CAMERA_WIDTH, 15);
 		this.m_Camera.setHUD(m_TopHUD);
