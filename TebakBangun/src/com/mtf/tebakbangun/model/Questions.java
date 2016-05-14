@@ -23,7 +23,10 @@ public class Questions extends Sprite {
 	
 	public enum SHAPE
 	{
-		CUBE(0),BLOCK(1),TUBE(2),CONE(3),PYRAMID(4),BALL(5),COUNT(6);
+		CUBE(0),BLOCK(1),TUBE(2),CONE(3),PYRAMID(4),BALL(5), //Level 1
+		BLOCK_BALL(6), CONE_CUBE(7), PYRAMID_TUBE(8), //Level 2
+		TUBEBLOCK(9), PYRACUBE(10), CONEBALL(11), //Level 3
+		COUNT(12);
 		private int value;
 		
 		private SHAPE(int value) {
@@ -50,6 +53,18 @@ public class Questions extends Sprite {
 	    			return "PIRAMIDA";
 	    		case 5:
 	    			return "BOLA";
+	    		case 6:
+	    			return "BALOK & BOLA";
+	    		case 7:
+	    			return "KERUCUT & KUBUS";
+	    		case 8:
+	    			return "PIRAMIDA & TABUNG";
+	    		case 9:
+	    			return "TABUNG & BALOK";
+	    		case 10:
+	    			return "PIRAMIDA & KUBUS";
+	    		case 11:
+	    			return "KERUCUT & BOLA";
 	    		default:
 	    			return "TIDAK DIKENAL";
 	    	}
@@ -89,11 +104,10 @@ public class Questions extends Sprite {
 		for(int i=0;i<3;i++)
 		{
 			pX += AnswerButton.PADDING;
-			answerButtons[i] = new AnswerButton(mAnswerTextureRegion, m_Font, "");
 			if(i == correctAnswer)
 			{
 				String answerText = SHAPE.getString(this.ID);
-				answerButtons[i].SetText(answerText);
+				answerButtons[i] = new AnswerButton(mAnswerTextureRegion, m_Font, answerText);
 				answerButtons[i].SetIsCorrectAnswer(true);
 			}
 			else
@@ -102,12 +116,17 @@ public class Questions extends Sprite {
 				boolean doAgain = true;
 				do
 				{
-					ans = rn.nextInt(6);
+					if(forLevel == 2 || forLevel == 3)
+						ans = rn.nextInt((8 - 6) + 1) + 6;
+					else if (forLevel == 4 || forLevel == 5)
+						ans = rn.nextInt((11 - 9) + 1) + 9;
+					else
+						ans = rn.nextInt(6);
 					doAgain = (ans == this.ID || ans == usedAnswer);
 				} while (doAgain);
 				usedAnswer = ans;	
 				String answerText = SHAPE.getString(ans);
-				answerButtons[i].SetText(answerText);
+				answerButtons[i] = new AnswerButton(mAnswerTextureRegion, m_Font, answerText);
 				answerButtons[i].SetIsCorrectAnswer(false);
 			}
 			answerButtons[i].setPosition(pX, pY);
@@ -124,6 +143,16 @@ public class Questions extends Sprite {
 	private void InitShape()
 	{
 		int ANIM_WIDTH = 200, ANIM_HEIGHT = 200;
+		if (forLevel == 2 || forLevel == 3)
+		{
+			ANIM_WIDTH += 200;
+			ANIM_HEIGHT += 100;
+		}
+		else if (forLevel == 4 || forLevel == 5)
+		{
+			ANIM_WIDTH += 200;
+			ANIM_HEIGHT += 200;
+		}
 		final int centerX = PlayGameActivity.getInstance().CAMERA_WIDTH / 2;
 		final int centerY = PlayGameActivity.getInstance().CAMERA_HEIGHT / 2;
 		image = new BasicShapeAnimated(centerX-(ANIM_WIDTH/2), centerY-(ANIM_HEIGHT/2),

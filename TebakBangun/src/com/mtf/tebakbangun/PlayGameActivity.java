@@ -157,11 +157,16 @@ public class PlayGameActivity extends BaseGameActivity implements
 			indexLevel3_1 = rn.nextInt(3);
 			indexLevel3_2 = rn.nextInt(3);
 		} while (indexLevel3_1 == indexLevel3_2);
-		questions[0] = new Questions(0, 1, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level1TiledTextureRegion[indexLevel1]);
-		questions[1] = new Questions(1, 2, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level2TiledTextureRegion[indexLevel2_1]);
-		questions[2] = new Questions(2, 3, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level2TiledTextureRegion[indexLevel2_2]);
-		questions[3] = new Questions(3, 4, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level3TiledTextureRegion[indexLevel3_1]);
-		questions[4] = new Questions(4, 5, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level3TiledTextureRegion[indexLevel3_2]);
+		int ID = indexLevel1; //FOR answer
+		questions[0] = new Questions(ID, 1, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level1TiledTextureRegion[indexLevel1]);
+		ID = indexLevel2_1 + 6;
+		questions[1] = new Questions(ID, 2, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level2TiledTextureRegion[indexLevel2_1]);
+		ID = indexLevel2_2 + 6;
+		questions[2] = new Questions(ID, 3, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level2TiledTextureRegion[indexLevel2_2]);
+		ID = indexLevel3_1 + 9;
+		questions[3] = new Questions(ID, 4, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level3TiledTextureRegion[indexLevel3_1]);
+		ID = indexLevel3_2 + 9;
+		questions[4] = new Questions(ID, 5, m_BackgroundTextureRegion, mAnswerTextureRegion, m_Level3TiledTextureRegion[indexLevel3_2]);
 	}
 	
 	private void ShowQuestion(int level)
