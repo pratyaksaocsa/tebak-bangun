@@ -35,9 +35,6 @@ import android.graphics.Color;
 
 public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemClickListener {
 
-	// ===========================================================
-	// Constants
-	// ===========================================================
 	private static final int CAMERA_WIDTH = 800;
 	private static final int CAMERA_HEIGHT = 480;
 	
@@ -50,9 +47,6 @@ public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemCli
 		public static final int QUIT = 4;
 	};
 	
-	// ===========================================================
-	// Fields
-	// ===========================================================
 	private Camera mCamera;
 	private Scene mMainScene;
 	private BitmapTextureAtlas mBackgroundTextureAtlas;
@@ -62,9 +56,6 @@ public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemCli
 	protected Font mFont;
 	private Music mBackgroundMusic;
 	private Sound mClickSound;
-	// ===========================================================
-	// Methods for/from SuperClass/Interfaces
-	// ===========================================================
 
 	@Override
 	public Engine onLoadEngine() {
@@ -195,13 +186,12 @@ public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemCli
 				intent = new Intent(BubbleDefenseActivity.this, HelpActivity.class);
 				BubbleDefenseActivity.this.startActivity(intent);
 				finish();
-				break;
-			case (MENU_CREDIT):
-				intent = new Intent(BubbleDefenseActivity.this,
-						CreditActivity.class);
-				BubbleDefenseActivity.this.startActivity(intent);
-				finish();
 				break;*/
+			case MENU.CREDIT:
+				intent = new Intent(MainMenuActivity.this, CreditActivity.class);
+				MainMenuActivity.this.startActivity(intent);
+				finish();
+				break;
 			case MENU.QUIT:
 				finish();
 				return true;
