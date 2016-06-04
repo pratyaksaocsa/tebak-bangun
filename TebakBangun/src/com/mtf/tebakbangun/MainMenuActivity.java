@@ -108,8 +108,6 @@ public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemCli
 	}
 
 	private void createStaticMenu() {
-		final int centerX = CAMERA_WIDTH / 2;
-		final int centerY = CAMERA_HEIGHT / 2;
 		this.mStaticMenuScene = new MenuScene(this.mCamera);
 		final IMenuItem playMenuItem = new ColorMenuItemDecorator(
 				new TextMenuItem(MENU.PLAY, mFont, "PLAY GAME"), 0f, 0f, 0.5f,
