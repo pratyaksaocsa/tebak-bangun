@@ -41,10 +41,9 @@ public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemCli
 	private static class MENU
 	{
 		public static final int PLAY = 0;
-		public static final int SCORES = 1;
-		public static final int CREDIT = 2;
-		public static final int HELP = 3;
-		public static final int QUIT = 4;
+		public static final int CREDIT = 1;
+		public static final int HELP = 2;
+		public static final int QUIT = 3;
 	};
 	
 	private Camera mCamera;
@@ -109,40 +108,41 @@ public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemCli
 	}
 
 	private void createStaticMenu() {
+		final int centerX = CAMERA_WIDTH / 2;
+		final int centerY = CAMERA_HEIGHT / 2;
 		this.mStaticMenuScene = new MenuScene(this.mCamera);
 		final IMenuItem playMenuItem = new ColorMenuItemDecorator(
 				new TextMenuItem(MENU.PLAY, mFont, "PLAY GAME"), 0f, 0f, 0.5f,
 				0.5f, 0.5f, 0.5f);
-		playMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA,
-				GL10.GL_ONE_MINUS_SRC_ALPHA);
+		playMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA,GL10.GL_ONE_MINUS_SRC_ALPHA);
+		
 		this.mStaticMenuScene.addMenuItem(playMenuItem);
-		final IMenuItem scoreMenuItem = new ColorMenuItemDecorator(
-				new TextMenuItem(MENU.SCORES, mFont, "SCORES"), 0f, 0f, 0.5f,
-				0.5f, 0.5f, 0.5f);
-		scoreMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA,
-				GL10.GL_ONE_MINUS_SRC_ALPHA);
-		this.mStaticMenuScene.addMenuItem(scoreMenuItem);
 		final IMenuItem helpMenuItem = new ColorMenuItemDecorator(
 				new TextMenuItem(MENU.HELP, this.mFont, "HELP"), 0f, 0f, 0.5f,
 				0.5f, 0.5f, 0.5f);
-		helpMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA,
-				GL10.GL_ONE_MINUS_SRC_ALPHA);
+		helpMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		
 		this.mStaticMenuScene.addMenuItem(helpMenuItem);
 		final IMenuItem creditMenuItem = new ColorMenuItemDecorator(
 				new TextMenuItem(MENU.CREDIT, this.mFont, "CREDIT"), 0f, 0f,
 				0.5f, 0.5f, 0.5f, 0.5f);
-		creditMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA,
-				GL10.GL_ONE_MINUS_SRC_ALPHA);
+		creditMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		
 		this.mStaticMenuScene.addMenuItem(creditMenuItem);
 		final IMenuItem quitMenuItem = new ColorMenuItemDecorator(
 				new TextMenuItem(MENU.QUIT, this.mFont, "QUIT"), 0f, 0f, 0.5f,
 				0.5f, 0.5f, 0.5f);
-		quitMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA,
-				GL10.GL_ONE_MINUS_SRC_ALPHA);
+		quitMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		
 		this.mStaticMenuScene.addMenuItem(quitMenuItem);
 		this.mStaticMenuScene.buildAnimations();
 		this.mStaticMenuScene.setBackgroundEnabled(false);
 		this.mStaticMenuScene.setOnMenuItemClickListener(this);
+		
+		playMenuItem.setPosition(playMenuItem.getX(), playMenuItem.getY() - 20);
+		helpMenuItem.setPosition(helpMenuItem.getX(), playMenuItem.getY() + 45);
+		creditMenuItem.setPosition(creditMenuItem.getX(), helpMenuItem.getY() + 45);
+		quitMenuItem.setPosition(quitMenuItem.getX(), creditMenuItem.getY() + 50);
 	}
 	
 	@Override
