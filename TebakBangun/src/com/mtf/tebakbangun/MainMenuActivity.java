@@ -174,17 +174,11 @@ public class MainMenuActivity extends BaseGameActivity implements IOnMenuItemCli
 				MainMenuActivity.this.startActivity(intent);
 				finish();
 				break;
-			/*case (MENU_SCORES):
-				intent = new Intent(BubbleDefenseActivity.this,
-						ScoreActivity.class);
-				BubbleDefenseActivity.this.startActivity(intent);
+			case MENU.HELP:
+				intent = new Intent(MainMenuActivity.this, TutorialActivity.class);
+				MainMenuActivity.this.startActivity(intent);
 				finish();
 				break;
-			case (MENU_HELP):
-				intent = new Intent(BubbleDefenseActivity.this, HelpActivity.class);
-				BubbleDefenseActivity.this.startActivity(intent);
-				finish();
-				break;*/
 			case MENU.CREDIT:
 				intent = new Intent(MainMenuActivity.this, CreditActivity.class);
 				MainMenuActivity.this.startActivity(intent);
